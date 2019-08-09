@@ -1,16 +1,27 @@
 import React, {useState} from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { addTech } from '../../actions/techActions'
+
 import M from 'materialize-css/dist/js/materialize.min.js'
 
-const AddTechModal = () => {
+const AddTechModal = ({ addTech }) => {
     const [ firstName, setFirstName ] = useState('')
     const [ lastName, setLastName ] = useState('')
 
     const onSubmit = () => {
         if (firstName === '' || lastName === '') {
-            M.toast({ html: 'Please enter the first and last name'})
-        } 
-        console.log(firstName, lastName)
-        clearFields()
+            M.toast({ html: 'Please enter the first and last name', classes: 'red'})
+        } else {
+            const newTech = {
+                firstName,
+                lastName
+            }
+            addTech(newTech)
+            M.toast({html: 'technician added', classes: 'teal darken-3'})
+            clearFields()
+        }
+        
     }
     const clearFields = ()=> {
         setFirstName('')
@@ -30,7 +41,7 @@ const AddTechModal = () => {
 
                 <div className="row">
                     <div className="input-field">
-                        <input type="text" name='lastName' value={lastName} onChange={e => setFirstName(e.target.value)} />
+                        <input type="text" name='lastName' value={lastName} onChange={e => setLastName(e.target.value)} />
                         <label htmlFor="lastName" className="active">Last Name</label>
                     </div>
                 </div>
@@ -43,7 +54,9 @@ const AddTechModal = () => {
         </div>
     )
 }
+AddTechModal.propTypes = {
+    addTech: PropTypes.func.isRequired,
+}
 
-
-export default AddTechModal
+export default connect(null, { addTech })(AddTechModal)
 
